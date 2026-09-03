@@ -26,7 +26,70 @@
           "type": "object",
           "properties": {}
         },
-        "outputSchema": null
+        "outputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "tagline": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "chain": {
+              "type": "string"
+            },
+            "contract": {
+              "type": "string"
+            },
+            "tokenomics": {
+              "type": "object",
+              "properties": {
+                "supply": {
+                  "type": "string"
+                },
+                "tax": {
+                  "type": "string"
+                },
+                "liquidity": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "supply",
+                "tax",
+                "liquidity"
+              ]
+            },
+            "contact": {
+              "type": "string"
+            },
+            "links": {
+              "type": "object",
+              "properties": {
+                "dexscreener": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "dexscreener"
+              ]
+            }
+          },
+          "required": [
+            "name",
+            "tagline",
+            "description",
+            "chain",
+            "contract",
+            "tokenomics",
+            "contact",
+            "links"
+          ]
+        }
       },
       {
         "name": "ask_the_box",
@@ -51,7 +114,22 @@
             "question"
           ]
         },
-        "outputSchema": null
+        "outputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "question": {
+              "type": "string"
+            },
+            "reply": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "question",
+            "reply"
+          ]
+        }
       },
       {
         "name": "get_trending_tokens",
@@ -75,7 +153,44 @@
             }
           }
         },
-        "outputSchema": null
+        "outputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "tokens": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "symbol": {
+                    "type": "string"
+                  },
+                  "change24h": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "url": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "symbol",
+                  "change24h",
+                  "url"
+                ]
+              }
+            }
+          },
+          "required": [
+            "tokens"
+          ]
+        }
       }
     ]
   }

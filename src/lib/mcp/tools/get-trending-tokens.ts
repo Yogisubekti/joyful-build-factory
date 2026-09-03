@@ -16,6 +16,16 @@ export default defineTool({
   inputSchema: {
     limit: z.number().int().min(1).max(20).default(10).describe("Max tokens to return."),
   },
+  outputSchema: {
+    tokens: z.array(
+      z.object({
+        name: z.string(),
+        symbol: z.string(),
+        change24h: z.number().nullable(),
+        url: z.string(),
+      }),
+    ),
+  },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: true },
   handler: async ({ limit }) => {
     const urls = [
@@ -34,7 +44,10 @@ export default defineTool({
     ).slice(0, limit);
 
     if (addrs.length === 0) {
-      return { content: [{ type: "text", text: "No boosted Robinhood Chain tokens right now." }] };
+      return {
+        content: [{ type: "text", text: "No boosted Robinhood Chain tokens right now." }],
+        structuredContent: { tokens: [] },
+      };
     }
 
     const res = await fetch(

@@ -1,4 +1,5 @@
 import { defineTool } from "@lovable.dev/mcp-js";
+import { z } from "zod";
 
 export default defineTool({
   name: "get_project_info",
@@ -6,6 +7,16 @@ export default defineTool({
   description:
     "Return public facts about the $AIBOX memecoin site: tagline, tokenomics, chain, contract status and contact email.",
   inputSchema: {},
+  outputSchema: {
+    name: z.string(),
+    tagline: z.string(),
+    description: z.string(),
+    chain: z.string(),
+    contract: z.string(),
+    tokenomics: z.object({ supply: z.string(), tax: z.string(), liquidity: z.string() }),
+    contact: z.string(),
+    links: z.object({ dexscreener: z.string() }),
+  },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: () => {
     const info = {

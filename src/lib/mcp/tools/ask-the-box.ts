@@ -20,6 +20,7 @@ export default defineTool({
   description:
     "Ask $AIBOX a question and receive one of the box's oracle replies (same feature as the website widget).",
   inputSchema: { question: z.string().trim().min(1).describe("Question for the box.") },
+  outputSchema: { question: z.string(), reply: z.string() },
   annotations: { readOnlyHint: true, idempotentHint: false, openWorldHint: false },
   handler: ({ question }) => {
     const reply = ASK_REPLIES[Math.floor(Math.random() * ASK_REPLIES.length)]!;
