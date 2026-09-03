@@ -387,6 +387,18 @@ function Index() {
         ))}
       </div>
 
+      <div className="mb-10 w-full max-w-[460px] rounded-[14px] border border-line bg-surface p-[18px] text-center">
+        <div className="mb-2 font-mono text-[0.72rem] uppercase tracking-wide text-dim">
+          Contact / Partnerships
+        </div>
+        <a
+          href="mailto:join@getaibox.xyz"
+          className="inline-block font-mono text-[0.95rem] font-semibold text-neon transition-colors hover:text-led"
+        >
+          join@getaibox.xyz
+        </a>
+      </div>
+
       <footer className="max-w-[420px] font-mono text-[0.7rem] leading-[1.7] text-dim">
         Built to celebrate Dell's record AI backlog quarter. A tribute, not a ticker.
         <span className="mt-2 block text-muted-foreground">
