@@ -2,6 +2,20 @@
 @source "../src";
 @import "tw-animate-css";
 
+@theme {
+  --font-sans: "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --color-neon: oklch(0.92 0.21 122);
+  --color-led: oklch(0.92 0.13 190);
+  --color-dim: oklch(0.68 0.005 285);
+  --color-line: oklch(0.26 0.004 285);
+  --color-surface: oklch(0.18 0.003 285);
+  --color-surface-hover: oklch(0.21 0.006 140);
+  --color-panel: oklch(0.16 0.004 140);
+  --color-down: oklch(0.7 0.16 20);
+  --shadow-glow: 0 0 30px oklch(0.92 0.21 122 / 0.3);
+}
+
 @custom-variant dark (&:is(.dark *));
 
 /*
@@ -63,8 +77,8 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  --background: oklch(0.14 0.002 285);
+  --foreground: oklch(0.96 0.002 285);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);
   --popover: oklch(1 0 0);
@@ -74,7 +88,7 @@
   --secondary: oklch(0.968 0.007 247.896);
   --secondary-foreground: oklch(0.208 0.042 265.755);
   --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
+  --muted-foreground: oklch(0.52 0.003 285);
   --accent: oklch(0.968 0.007 247.896);
   --accent-foreground: oklch(0.208 0.042 265.755);
   --destructive: oklch(0.577 0.245 27.325);
@@ -141,4 +155,54 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
   }
+}
+
+@layer components {
+  .panel {
+    width: 100%;
+    max-width: 460px;
+    background: var(--color-panel);
+    border: 1px solid var(--color-line);
+    border-radius: 14px;
+    padding: 16px 18px;
+  }
+  .panel-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--color-dim);
+    letter-spacing: 0.04em;
+  }
+  .t-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-led);
+    box-shadow: 0 0 8px var(--color-led);
+    animation: aibox-pulse 1.6s ease-in-out infinite;
+  }
+  .t-cursor {
+    display: inline-block;
+    width: 6px;
+    height: 12px;
+    background: var(--color-neon);
+    vertical-align: middle;
+    margin-left: 2px;
+    animation: aibox-blink 1s step-end infinite;
+  }
+}
+
+@keyframes aibox-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+@keyframes aibox-blink {
+  50% { opacity: 0; }
+}
+
+body {
+  font-family: var(--font-sans);
 }
