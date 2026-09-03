@@ -1,0 +1,197 @@
+{
+  "version": 1,
+  "sdk_version": "1.0.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "ready-to-build",
+      "version": "0.1.0",
+      "title": "Ready to Build"
+    },
+    "tools": [
+      {
+        "name": "get_project_info",
+        "title": "Get $AIBOX project info",
+        "description": "Return public facts about the $AIBOX memecoin site: tagline, tokenomics, chain, contract status and contact email.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "tagline": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "chain": {
+              "type": "string"
+            },
+            "contract": {
+              "type": "string"
+            },
+            "tokenomics": {
+              "type": "object",
+              "properties": {
+                "supply": {
+                  "type": "string"
+                },
+                "tax": {
+                  "type": "string"
+                },
+                "liquidity": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "supply",
+                "tax",
+                "liquidity"
+              ]
+            },
+            "contact": {
+              "type": "string"
+            },
+            "links": {
+              "type": "object",
+              "properties": {
+                "dexscreener": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "dexscreener"
+              ]
+            }
+          },
+          "required": [
+            "name",
+            "tagline",
+            "description",
+            "chain",
+            "contract",
+            "tokenomics",
+            "contact",
+            "links"
+          ]
+        }
+      },
+      {
+        "name": "ask_the_box",
+        "title": "Ask the box",
+        "description": "Ask $AIBOX a question and receive one of the box's oracle replies (same feature as the website widget).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "question": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Question for the box."
+            }
+          },
+          "required": [
+            "question"
+          ]
+        },
+        "outputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "question": {
+              "type": "string"
+            },
+            "reply": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "question",
+            "reply"
+          ]
+        }
+      },
+      {
+        "name": "get_trending_tokens",
+        "title": "Get trending Robinhood Chain tokens",
+        "description": "Fetch boosted/trending tokens on Robinhood Chain from the public DexScreener API, same live feed shown on the site.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": true
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "limit": {
+              "default": 10,
+              "description": "Max tokens to return.",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20
+            }
+          }
+        },
+        "outputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "tokens": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "symbol": {
+                    "type": "string"
+                  },
+                  "change24h": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "url": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "symbol",
+                  "change24h",
+                  "url"
+                ]
+              }
+            }
+          },
+          "required": [
+            "tokens"
+          ]
+        }
+      }
+    ]
+  }
+}
