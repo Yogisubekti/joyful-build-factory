@@ -72,7 +72,7 @@ function Terminal() {
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout>;
     const tick = () => {
-      const line = TERM_LINES[idx.current % TERM_LINES.length];
+      const line = TERM_LINES[idx.current % TERM_LINES.length] ?? "";
       if (char.current < line.length) {
         char.current += 1;
         setText(line.slice(0, char.current));
@@ -116,7 +116,7 @@ function AskTheBox() {
     setTimeout(() => {
       clearInterval(iv);
       setThinking(0);
-      setReply(ASK_REPLIES[Math.floor(Math.random() * ASK_REPLIES.length)]);
+      setReply(ASK_REPLIES[Math.floor(Math.random() * ASK_REPLIES.length)] ?? null);
     }, 1100);
   };
 
