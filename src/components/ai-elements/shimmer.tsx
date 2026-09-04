@@ -56,12 +56,13 @@ const ShimmerComponent = ({
         className
       )}
       initial={{ backgroundPosition: "100% center" }}
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       style={
         {
           "--spread": `${dynamicSpread}px`,
           backgroundImage:
             "var(--bg), linear-gradient(var(--color-muted-foreground), var(--color-muted-foreground))",
-        } as unknown as React.CSSProperties
+        } as any
       }
       transition={{
         duration,
