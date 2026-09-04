@@ -124,7 +124,7 @@ function Terminal() {
 
 function AskTheBox() {
   const [chatKey, setChatKey] = useState(0);
-  const { messages, sendMessage, status, error, reload } = useChat({
+  const { messages, sendMessage, status, error } = useChat({
     id: `aibox-${chatKey}`,
     transport: new DefaultChatTransport({ api: "/api/chat" }),
   });
@@ -183,13 +183,6 @@ function AskTheBox() {
       {error && (
         <div className="mb-2 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-left font-mono text-[0.75rem] text-destructive-foreground">
           The box glitched: {error.message}
-          <button
-            type="button"
-            onClick={() => reload?.()}
-            className="ml-2 underline"
-          >
-            Retry
-          </button>
         </div>
       )}
 
