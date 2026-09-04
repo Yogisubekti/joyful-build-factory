@@ -407,7 +407,9 @@ function Index() {
       </div>
 
       <Terminal />
-      <AskTheBox />
+      <ClientOnly>
+        <AskTheBox />
+      </ClientOnly>
 
       <div className="mb-10 flex w-full max-w-[460px] overflow-hidden rounded-[14px] border border-line font-mono">
         {[
