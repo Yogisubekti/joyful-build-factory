@@ -1,5 +1,27 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport } from "ai";
+import { ClientOnly } from "@/components/client-only";
+import {
+  Conversation,
+  ConversationContent,
+  ConversationEmptyState,
+  ConversationScrollButton,
+} from "@/components/ai-elements/conversation";
+import {
+  Message,
+  MessageContent,
+  MessageResponse,
+} from "@/components/ai-elements/message";
+import {
+  PromptInput,
+  PromptInputFooter,
+  PromptInputSubmit,
+  PromptInputTextarea,
+} from "@/components/ai-elements/prompt-input";
+import { Shimmer } from "@/components/ai-elements/shimmer";
+import { RefreshCw } from "lucide-react";
 import logo from "@/assets/aibox-logo.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
@@ -102,43 +124,88 @@ function Terminal() {
 }
 
 function AskTheBox() {
-  const [reply, setReply] = useState<string | null>(null);
-  const [thinking, setThinking] = useState(0);
+  const [chatKey, setChatKey] = useState(0);
+  const { messages, sendMessage, status, error } = useChat({
+    id: `aibox-${chatKey}`,
+    transport: new DefaultChatTransport({ api: "/api/chat" }),
+  });
 
-  const ask = () => {
-    setReply(null);
-    setThinking(1);
-    let dots = 0;
-    const iv = setInterval(() => {
-      dots = (dots + 1) % 4;
-      setThinking(dots + 1);
-    }, 220);
-    setTimeout(() => {
-      clearInterval(iv);
-      setThinking(0);
-      setReply(ASK_REPLIES[Math.floor(Math.random() * ASK_REPLIES.length)] ?? null);
-    }, 1100);
-  };
+  const isLoading = status === "submitted" || status === "streaming";
 
   return (
     <div className="mb-10 w-full max-w-[460px]">
-      <button
-        onClick={ask}
-        className="mb-[10px] w-full cursor-pointer rounded-xl border border-dashed border-led bg-surface p-[14px] font-mono text-[0.88rem] font-semibold text-led transition-colors hover:bg-surface-hover"
-      >
-        Ask the box ↴
-      </button>
-      <div className="min-h-5 px-1 text-left font-mono text-[0.82rem] text-foreground">
-        {thinking > 0 && (
-          <span className="text-dim">thinking{".".repeat(thinking - 1)}</span>
-        )}
-        {reply && (
-          <>
-            <span className="text-dim">&gt; </span>
-            {reply}
-          </>
-        )}
+      <div className="mb-3 flex items-center justify-between px-1">
+        <span className="font-mono text-[0.78rem] uppercase tracking-wide text-dim">
+          Ask the box
+        </span>
+        <button
+          type="button"
+          onClick={() => setChatKey((k) => k + 1)}
+          className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 font-mono text-[0.72rem] text-dim transition-colors hover:bg-surface hover:text-led"
+          title="New conversation"
+        >
+          <RefreshCw className="size-3.5" />
+          New chat
+        </button>
       </div>
+
+      <div className="panel mb-3 flex h-[320px] flex-col overflow-hidden text-left">
+        <Conversation>
+          <ConversationContent>
+            {messages.map((message) => (
+              <Message key={message.id} from={message.role}>
+                <MessageContent>
+                  <MessageResponse>{message.parts.map((part) => (part.type === "text" ? part.text : "")).join("")}</MessageResponse>
+                </MessageContent>
+              </Message>
+            ))}
+            {messages.length === 0 && (
+              <ConversationEmptyState
+                icon={
+                  <span className="text-[1.4rem]">📦</span>
+                }
+                title="The box is listening"
+                description="Ask about $AIBOX, tokenomics, the chain, or the backlog."
+                className="opacity-70"
+              />
+            )}
+            {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
+              <Message from="assistant">
+                <MessageContent>
+                  <Shimmer className="font-mono text-[0.85rem]">thinking...</Shimmer>
+                </MessageContent>
+              </Message>
+            )}
+          </ConversationContent>
+          <ConversationScrollButton />
+        </Conversation>
+      </div>
+
+      {error && (
+        <div className="mb-2 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-left font-mono text-[0.75rem] text-destructive-foreground">
+          The box glitched: {error.message}
+        </div>
+      )}
+
+      <PromptInput
+        onSubmit={async ({ text }) => {
+          if (!text.trim()) return;
+          await sendMessage({ text: text.trim() });
+        }}
+      >
+        <PromptInputTextarea
+          placeholder="Type your question to the box..."
+          className="min-h-0 bg-surface py-3 font-mono text-[0.85rem] text-foreground placeholder:text-dim"
+          disabled={isLoading}
+        />
+        <PromptInputFooter className="justify-end px-2 pb-2">
+          <PromptInputSubmit
+            status={status}
+            disabled={isLoading}
+            className="bg-neon text-background hover:bg-neon/90"
+          />
+        </PromptInputFooter>
+      </PromptInput>
     </div>
   );
 }
@@ -340,7 +407,9 @@ function Index() {
       </div>
 
       <Terminal />
-      <AskTheBox />
+      <ClientOnly>
+        <AskTheBox />
+      </ClientOnly>
 
       <div className="mb-10 flex w-full max-w-[460px] overflow-hidden rounded-[14px] border border-line font-mono">
         {[
