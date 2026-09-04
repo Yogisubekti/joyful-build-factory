@@ -8,5 +8,5 @@ export function createLovableAiGatewayProvider(apiKey: string) {
       "Lovable-API-Key": apiKey,
     },
   });
-  return (modelId: string) => provider.chat(modelId);
+  return (modelId: string) => provider(modelId);
 }
